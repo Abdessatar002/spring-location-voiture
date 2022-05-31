@@ -6,19 +6,23 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.location.voiture.models.Voiture;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 public interface VoitureDao extends JpaRepository<Voiture, Long> {
+
     Voiture findByMatricule(String matricule);
 
-    @Query(value = "SELECT * from voiture where visite_technique < date_add(current_date(),INTERVAL 7 DAY)", nativeQuery = true)
-    List<Voiture> visiteBeforeExpire();
+    @Query(value = "from Voiture where visiteTechnique < :toDayPlus7")
+    List<Voiture> visiteBeforeExpire(@Param("toDayPlus7") LocalDate toDayPlus7);
 
-    @Query(value = "SELECT * from voiture where assurance < date_add(current_date(),INTERVAL 7 DAY)", nativeQuery = true)
-    List<Voiture> assuranceBeforeExpire();
+    @Query(value = "from Voiture where assurance < :toDayPlus7")
+    List<Voiture> assuranceBeforeExpire(@Param("toDayPlus7") LocalDate toDayPlus7);
 
-    @Query(value = "SELECT * from voiture where taxe < date_add(current_date(),INTERVAL 7 DAY)", nativeQuery = true)
-    List<Voiture> taxeBeforeExpire();
+    @Query(value = "from Voiture where taxe < :toDayPlus7")
+    List<Voiture> taxeBeforeExpire(@Param("toDayPlus7") LocalDate toDayPlus7);
 
 }

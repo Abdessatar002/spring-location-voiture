@@ -7,6 +7,7 @@ import com.location.voiture.models.Voiture;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 public interface IVoitureService {
@@ -14,11 +15,11 @@ public interface IVoitureService {
     Voiture addNewVoiture(Voiture voiture, MultipartFile multipartFile) throws IOException, VoitureExistException;
 
 
-    List<Voiture> visiteBeforeExpire();
+    List<Voiture> visiteBeforeExpire(LocalDate toDayPlus7);
 
-    List<Voiture> assuranceBeforeExpire();
+    List<Voiture> assuranceBeforeExpire(LocalDate toDayPlus7);
 
-    List<Voiture> taxeBeforeExpire();
+    List<Voiture> taxeBeforeExpire(LocalDate toDayPlus7);
 
 
     List<Voiture> getVoituresDispo();

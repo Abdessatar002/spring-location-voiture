@@ -54,18 +54,18 @@ public class VoitureService implements IVoitureService {
     }
 
     @Override
-    public List<Voiture> visiteBeforeExpire() {
-      return   voitureDao.visiteBeforeExpire();
+    public List<Voiture> visiteBeforeExpire(LocalDate toDayPlus7) {
+      return   voitureDao.visiteBeforeExpire(toDayPlus7);
     }
 
     @Override
-    public List<Voiture> assuranceBeforeExpire() {
-        return   voitureDao.assuranceBeforeExpire();
+    public List<Voiture> assuranceBeforeExpire(LocalDate toDayPlus7) {
+        return   voitureDao.assuranceBeforeExpire(toDayPlus7);
     }
 
     @Override
-    public List<Voiture> taxeBeforeExpire() {
-        return   voitureDao.taxeBeforeExpire();
+    public List<Voiture> taxeBeforeExpire(LocalDate toDayPlus7) {
+        return   voitureDao.taxeBeforeExpire(toDayPlus7);
     }
 
     @Override

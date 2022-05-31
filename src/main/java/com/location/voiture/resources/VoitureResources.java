@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -38,18 +39,19 @@ public class VoitureResources extends ExceptionHandling {
     @Autowired
     VoitureDao voitureDao;
 
+    private LocalDate toDayPlus7 = LocalDate.now().plusDays(7);
 
     @GetMapping("/visite")
     public List<Voiture> visiteBeforeExpire() {
-        return voitureDao.visiteBeforeExpire();
+        return voitureDao.visiteBeforeExpire(toDayPlus7);
     }
     @GetMapping("/assurance")
     public List<Voiture> assuranceBeforeExpire() {
-        return voitureDao.assuranceBeforeExpire();
+        return voitureDao.assuranceBeforeExpire(toDayPlus7);
     }
     @GetMapping("/taxe")
     public List<Voiture> taxeBeforeExpire() {
-        return voitureDao.taxeBeforeExpire();
+        return voitureDao.taxeBeforeExpire(toDayPlus7);
     }
 
     @GetMapping("/voitures_dispo")
