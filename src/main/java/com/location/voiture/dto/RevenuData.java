@@ -7,6 +7,6 @@ import lombok.Data;
 @AllArgsConstructor
 public class RevenuData {
 
-    private int month;
+    private double month;
     private double total;
 }

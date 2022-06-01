@@ -42,6 +42,8 @@ public class ContratResources extends ExceptionHandling {
     public List<Contrat> getContartsEnCours(){
         return contratService.getContratsEncours();
     }
+
+
     @GetMapping("/remaining_days")
     public List<RemainingDaysOfContrat> getRemainingDaysOfContrat(){
         return contratService.getRemainingDaysOfContrat();

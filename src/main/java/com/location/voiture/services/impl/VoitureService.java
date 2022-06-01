@@ -76,13 +76,12 @@ public class VoitureService implements IVoitureService {
             contratByVoitureMatricule.stream().anyMatch(contrat ->{
                  if (contrat.getDateRetour() == null || contrat.getDateRetour().toLocalDate().isAfter(LocalDate.now())){
                      voiture.setEnLocation(true);
-                 }
-                 else {
+                     return true;
+                 }else {
                      voiture.setEnLocation(false);
+                     return false;
                  }
-                return true;
             });
-
            return !voiture.isEnLocation() && voiture.isActive();
        }).collect(Collectors.toList());
 

@@ -15,8 +15,8 @@ import java.util.List;
 public interface ContratDao extends JpaRepository<Contrat, Long> {
     // SELECT month(contrat.date_depart) AS mon, SUM(tarif * num_day) as total FROM contrat WHERE contrat.voiture_id = 8 AND YEAR(contrat.date_depart) = 2022
 // GROUP BY MONTH(contrat.date_depart)
-    @Query(value = "SELECT MONTH(contrat.date_depart) AS mon, SUM(tarif * num_day) as total FROM contrat WHERE contrat.voiture_id = :id AND YEAR(contrat.date_depart) = :theYear" +
-            " GROUP BY MONTH(contrat.date_depart)", nativeQuery = true)
+    @Query(value = "SELECT date_part('month',contrat.date_depart) AS mon, SUM(tarif * num_day) as total FROM contrat WHERE contrat.voiture_id = :id AND EXTRACT(YEAR FROM contrat.date_depart) = :theYear" +
+            " GROUP BY mon", nativeQuery = true)
     List<Object[]> getRevenuAnnuel(@Param("theYear") int theYear, @Param("id") Long id);
 
 
@@ -27,15 +27,12 @@ public interface ContratDao extends JpaRepository<Contrat, Long> {
     List<Contrat> findAllByDriverOne_PrenomContainingOrNumContratContainingOrDateCreatedLike
             (String driverOne_prenom, String numContrat, LocalDateTime dateCreated);
 
-    @Query(value = "SELECT datediff(DATE(date_retour)," +
-            "DATE(current_date())) as resulte , voiture.matricule as matricule " +
-            "from contrat join voiture on voiture_id = voiture.id " +
-            "where DATE(contrat.date_retour) > DATE(current_date())",
+    @Query(value = "SELECT DATE(date_retour) - DATE(current_date), voiture.matricule from contrat join voiture on voiture_id = voiture.id where DATE(contrat.date_retour) > DATE(current_date)",
             nativeQuery = true)
     List<Object[]> getRemainingDaysOfContrat();
 
 
-    @Query(value = "select * from contrat where DATE(date_retour)> DATE(current_date()) or date_retour is null ", nativeQuery = true)
+    @Query(value = "select * from contrat where DATE(date_retour)> DATE(current_date) or date_retour is null", nativeQuery = true)
     List<Contrat> getContartsEnCours();
 
 

@@ -166,7 +166,7 @@ public class ContratService implements IContratService {
     public List<RevenuData> getRevenu(int year, long id ){
         List<Object[]> revenuAnnuel = contratDao.getRevenuAnnuel(year, id);
         return revenuAnnuel.stream().map(objects ->
-                new RevenuData((int) objects[0], (double) objects[1])).collect(Collectors.toList());
+                new RevenuData((double)objects[0], (double) objects[1])).collect(Collectors.toList());
     }
 
     private void validatePeriod(LocalDateTime depart, LocalDateTime retour, List<Contrat> byVoitureMatricule) throws EnLocationException {
