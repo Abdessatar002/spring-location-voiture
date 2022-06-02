@@ -2,6 +2,7 @@ package com.location.voiture.resources;
 
 
 import com.location.voiture.domain.*;
+import com.location.voiture.enumeration.Role;
 import com.location.voiture.models.HttpResponse;
 import com.location.voiture.models.User;
 import com.location.voiture.models.UserPrincipal;
@@ -24,6 +25,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Date;
 import java.util.List;
 
 
@@ -48,8 +50,7 @@ public class UserResources extends ExceptionHandling {
 
     @PostConstruct
     private void init(){
-        User user =new User();
-        user.setUsername("admin");
+        userService.addAdminUser();
     }
 
     @PostMapping("/login")

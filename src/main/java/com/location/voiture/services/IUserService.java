@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.util.List;
 
 public interface IUserService {
+    void addAdminUser();
+
     User register(String firstName, String lastName, String username, String email) throws UserNotFoundException, UsernameExistException, EmailExistException;
 
     List<User> getUsers();

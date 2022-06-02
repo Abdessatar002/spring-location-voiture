@@ -70,6 +70,24 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 
     }
 
+    @Override
+    public void addAdminUser(){
+        User user =new User();
+        user.setUserId(generateUserId());
+        String password ="admin";
+        user.setFirstName("admin");
+        user.setLastName("admin");
+        user.setUsername("admin");
+        user.setEmail("admin@admin.com");
+        user.setJoinDate(new Date());
+        user.setPassword(encodePassword(password));
+        user.setActive(true);
+        user.setNotLocked(true);
+        user.setRole(Role.ROLE_ADMIN.name());
+        user.setAuthorities(Role.ROLE_ADMIN.getAuthorities());
+        userDao.save(user);
+    }
+
     private void validateLoginAttempt(User user) {
         if (user.isNotLocked()) {
             if (loginAttemptService.hasExceededMaxOfAttempt(user.getUsername())) {
