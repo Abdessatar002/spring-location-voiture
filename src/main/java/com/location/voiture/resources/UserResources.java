@@ -17,6 +17,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.PostConstruct;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,6 +44,13 @@ public class UserResources extends ExceptionHandling {
    private JWTTokenProvider tokenProvider;
     @Autowired
    private AuthenticationManager authenticationManager;
+
+
+    @PostConstruct
+    private void init(){
+        User user =new User();
+        user.setUsername("admin");
+    }
 
     @PostMapping("/login")
     public ResponseEntity<User> login(@RequestBody User user) {

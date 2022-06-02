@@ -103,7 +103,6 @@ public class VoitureResources extends ExceptionHandling {
         return response(HttpStatus.OK, "La voiture été supprimé avec succès.");
     }
 
-
     @GetMapping(path = "/image/{fileName}", produces = IMAGE_JPEG_VALUE)
     public byte[] getProfileImage(@PathVariable("fileName") String fileName) throws IOException {
         return Files.readAllBytes(Paths.get(VOITURE_FOLDER+  fileName));
