@@ -72,6 +72,8 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 
     @Override
     public void addAdminUser(){
+       if (userDao.findByUsername("admin")!=null)
+           return;
         User user =new User();
         user.setUserId(generateUserId());
         String password ="admin";
@@ -102,6 +104,7 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 
     @Override
     public User register(String firstName, String lastName, String username, String email) throws UserNotFoundException, UsernameExistException, EmailExistException {
+
         validateNewUsernameAndEmail(StringUtils.EMPTY, username, email);
         User user = new User();
         user.setUserId(generateUserId());
@@ -117,7 +120,7 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
         user.setRole(Role.ROLE_USER.name());
         user.setAuthorities(Role.ROLE_USER.getAuthorities());
         user.setProfileImageUrl(getTemporaryProfileImageUrl(username));
-        userDao.save(user);
+        // userDao.save(user);
         LOGGER.info("user password : " + password);
         return user;
     }
