@@ -50,7 +50,7 @@ public class Voiture implements Serializable {
     private boolean isActive;
 
     @Transient
-    private boolean isEnLocation = true;
+    private boolean isEnLocation;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "voiture")
     private List<Document> voitureDoc;
