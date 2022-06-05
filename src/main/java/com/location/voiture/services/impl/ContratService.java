@@ -195,7 +195,7 @@ public class ContratService implements IContratService {
 
         JRBeanArrayDataSource jrBeanArrayDataSource = new JRBeanArrayDataSource(Collections.singletonList(contrat).toArray());
 
-        JasperReport jasperReport = JasperCompileManager.compileReport(new FileInputStream("src/main/resources/templates/scenario-contrat.jrxml"));
+        JasperReport jasperReport = JasperCompileManager.compileReport(new FileInputStream("/resources/templates/scenario-contrat.jrxml"));
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, jrBeanArrayDataSource);
 
         return JasperExportManager.exportReportToPdf(jasperPrint);
