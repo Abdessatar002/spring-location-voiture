@@ -9,12 +9,16 @@ import com.location.voiture.dto.RevenuData;
 import com.location.voiture.models.Contrat;
 import com.location.voiture.models.RemainingDaysOfContrat;
 import com.location.voiture.services.IContratService;
+import net.sf.jasperreports.engine.JRException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -72,6 +76,13 @@ public class ContratResources extends ExceptionHandling {
     @GetMapping("/list/contrat_by/{matricule}")
     public List<Contrat> findContratByVoitureMatricule(@PathVariable("matricule") String matricule) {
         return contratService.findContratByVoitureMatricule(matricule);
+    }
+    @GetMapping("/contrat-pdf")
+    public ResponseEntity<byte[]> generatePdf(@RequestParam("contratId") long contratId) throws FileNotFoundException, ResourceNotFoundException, JRException {
+        byte[] contratPdf = contratService.generateContratPdf(contratId);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=contrat"+contratId+".pdf");
+        return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF).body(contratPdf);
     }
 
     @DeleteMapping("/{contratId}")

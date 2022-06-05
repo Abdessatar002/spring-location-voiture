@@ -7,14 +7,22 @@ import com.location.voiture.domain.ResourceNotFoundException;
 import com.location.voiture.dto.RevenuData;
 import com.location.voiture.models.*;
 import com.location.voiture.services.*;
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.data.JRBeanArrayDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -161,6 +169,38 @@ public class ContratService implements IContratService {
             voiture.setEnLocation(false);
         contratDao.deleteById(contrat.getId());
     }
+    @Override
+    public byte[] generateContratPdf(long contratId) throws ResourceNotFoundException, JRException, FileNotFoundException {
+        Contrat contrat = getOneContrat(contratId);
+        Person person = clientService.getPerson(contrat.getDriverOne().getId());
+
+        Map<String, Object> map = new HashMap<>();
+        DateTimeFormatter formatterLocalDate = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter formatterLocalDateTime = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
+        if (contrat.getDateRetour() != null)
+            map.put("dateRetour", formatterLocalDateTime.format(contrat.getDateRetour()));
+        map.put("dateDepart", formatterLocalDateTime.format(contrat.getDateDepart()));
+        map.put("dateNaissance", formatterLocalDate.format(person.getDateDeNaissance()));
+        map.put("cinDate", formatterLocalDate.format(person.getCin().getValableJusqa()));
+        map.put("permisDate", formatterLocalDate.format(person.getPermis().getValableJusqa()));
+
+        if (contrat.getDriverTwo() != null) {
+            Person personTwo = clientService.getPerson(contrat.getDriverTwo().getId());
+            map.put("dateNaissanceDriverTwo", formatterLocalDate.format(personTwo.getDateDeNaissance()));
+            map.put("cinDateDriverTwo", formatterLocalDate.format(personTwo.getCin().getValableJusqa()));
+            map.put("permisDateDriverTwo", formatterLocalDate.format(personTwo.getPermis().getValableJusqa()));
+        }
+
+
+        JRBeanArrayDataSource jrBeanArrayDataSource = new JRBeanArrayDataSource(Collections.singletonList(contrat).toArray());
+
+        JasperReport jasperReport = JasperCompileManager.compileReport(new FileInputStream("src/main/resources/templates/scenario-contrat.jrxml"));
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, jrBeanArrayDataSource);
+
+        return JasperExportManager.exportReportToPdf(jasperPrint);
+    }
+
 
     @Override
     public List<RevenuData> getRevenu(int year, long id ){
