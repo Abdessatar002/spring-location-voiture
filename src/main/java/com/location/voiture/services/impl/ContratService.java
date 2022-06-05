@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.time.LocalDate;
@@ -194,7 +195,7 @@ public class ContratService implements IContratService {
 
         JRBeanArrayDataSource jrBeanArrayDataSource = new JRBeanArrayDataSource(Collections.singletonList(contrat).toArray());
         InputStream in = getClass().getResourceAsStream("src/main/resources/scenario-contrat.jrxml");
-        JasperReport jasperReport = JasperCompileManager.compileReport(in);
+        JasperReport jasperReport = JasperCompileManager.compileReport(new FileInputStream("src/main/resources/templates/scenario-contrat.jrxml"));
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, jrBeanArrayDataSource);
 
         return JasperExportManager.exportReportToPdf(jasperPrint);
