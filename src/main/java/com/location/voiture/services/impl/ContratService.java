@@ -11,8 +11,10 @@ import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanArrayDataSource;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 
 import javax.transaction.Transactional;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.time.LocalDate;
@@ -193,8 +195,10 @@ public class ContratService implements IContratService {
 
 
         JRBeanArrayDataSource jrBeanArrayDataSource = new JRBeanArrayDataSource(Collections.singletonList(contrat).toArray());
-        InputStream in = getClass().getResourceAsStream("/templates/scenario-contrat.jrxml");
-        JasperReport jasperReport = JasperCompileManager.compileReport(in);
+
+        File file = ResourceUtils.getFile("classpath:scenario-contrat.jrxml");
+        //InputStream in = getClass().getResourceAsStream("/templates/scenario-contrat.jrxml");
+        JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, jrBeanArrayDataSource);
 
         return JasperExportManager.exportReportToPdf(jasperPrint);
