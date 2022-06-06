@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -78,7 +79,7 @@ public class ContratResources extends ExceptionHandling {
         return contratService.findContratByVoitureMatricule(matricule);
     }
     @GetMapping("/contrat-pdf")
-    public ResponseEntity<byte[]> generatePdf(@RequestParam("contratId") long contratId) throws FileNotFoundException, ResourceNotFoundException, JRException {
+    public ResponseEntity<byte[]> generatePdf(@RequestParam("contratId") long contratId) throws IOException, ResourceNotFoundException, JRException {
         byte[] contratPdf = contratService.generateContratPdf(contratId);
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=contrat"+contratId+".pdf");

@@ -10,6 +10,7 @@ import com.location.voiture.models.RemainingDaysOfContrat;
 import net.sf.jasperreports.engine.JRException;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -38,7 +39,7 @@ public interface IContratService {
 
     void deleteContrat(long contratId) throws ResourceNotFoundException;
 
-    byte[] generateContratPdf(long contratId) throws ResourceNotFoundException, JRException, FileNotFoundException;
+    byte[] generateContratPdf(long contratId) throws ResourceNotFoundException, JRException, IOException;
 
     List<RevenuData> getRevenu(int year, long id);
 }

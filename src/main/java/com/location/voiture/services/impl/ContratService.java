@@ -9,6 +9,7 @@ import com.location.voiture.models.*;
 import com.location.voiture.services.*;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanArrayDataSource;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
@@ -16,6 +17,7 @@ import org.springframework.util.ResourceUtils;
 import javax.transaction.Transactional;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -171,7 +173,7 @@ public class ContratService implements IContratService {
         contratDao.deleteById(contrat.getId());
     }
     @Override
-    public byte[] generateContratPdf(long contratId) throws ResourceNotFoundException, JRException, FileNotFoundException {
+    public byte[] generateContratPdf(long contratId) throws ResourceNotFoundException, JRException, IOException {
         Contrat contrat = getOneContrat(contratId);
         Person person = clientService.getPerson(contrat.getDriverOne().getId());
 
@@ -196,9 +198,10 @@ public class ContratService implements IContratService {
 
         JRBeanArrayDataSource jrBeanArrayDataSource = new JRBeanArrayDataSource(Collections.singletonList(contrat).toArray());
 
-        File file = ResourceUtils.getFile("classpath:scenario-contrat.jrxml");
+        InputStream file = new ClassPathResource("scenario-contrat.jrxml").getInputStream();
+
         //InputStream in = getClass().getResourceAsStream("/templates/scenario-contrat.jrxml");
-        JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
+        JasperReport jasperReport = JasperCompileManager.compileReport(file);
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, jrBeanArrayDataSource);
 
         return JasperExportManager.exportReportToPdf(jasperPrint);
