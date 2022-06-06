@@ -78,7 +78,7 @@ public class ContratResources extends ExceptionHandling {
     public List<Contrat> findContratByVoitureMatricule(@PathVariable("matricule") String matricule) {
         return contratService.findContratByVoitureMatricule(matricule);
     }
-    @PostMapping("/contrat-pdf")
+    @GetMapping("/contrat-pdf")
     public ResponseEntity<byte[]> generatePdf(@RequestParam("contratId") long contratId) throws IOException, ResourceNotFoundException, JRException {
         byte[] contratPdf = contratService.generateContratPdf(contratId);
         HttpHeaders headers = new HttpHeaders();
