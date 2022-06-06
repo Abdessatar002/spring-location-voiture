@@ -78,11 +78,11 @@ public class ContratResources extends ExceptionHandling {
     public List<Contrat> findContratByVoitureMatricule(@PathVariable("matricule") String matricule) {
         return contratService.findContratByVoitureMatricule(matricule);
     }
-    @GetMapping("/contrat-pdf")
+    @PostMapping("/contrat-pdf")
     public ResponseEntity<byte[]> generatePdf(@RequestParam("contratId") long contratId) throws IOException, ResourceNotFoundException, JRException {
         byte[] contratPdf = contratService.generateContratPdf(contratId);
         HttpHeaders headers = new HttpHeaders();
-        headers.set(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=contrat"+contratId+".pdf");
+        //headers.set(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=contrat"+contratId+".pdf");
         return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF).body(contratPdf);
     }
 
