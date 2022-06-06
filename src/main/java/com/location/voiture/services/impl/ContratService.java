@@ -173,7 +173,7 @@ public class ContratService implements IContratService {
         contratDao.deleteById(contrat.getId());
     }
     @Override
-    public byte[] generateContratPdf(long contratId) throws ResourceNotFoundException, JRException, IOException {
+    public byte[] generateContratPdf(long contratId) throws ResourceNotFoundException {
         Contrat contrat = getOneContrat(contratId);
         Person person = clientService.getPerson(contrat.getDriverOne().getId());
 
@@ -200,13 +200,31 @@ public class ContratService implements IContratService {
         ClassLoader classLoader = getClass().getClassLoader();
         InputStream in = classLoader.getResourceAsStream("scenario-contrat.jrxml");
 
-        InputStream file = new ClassPathResource("scenario-contrat.jrxml").getInputStream();
+        try {
+            InputStream file = new ClassPathResource("scenario-contrat.jrxml").getInputStream();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         //InputStream in = getClass().getResourceAsStream("/templates/scenario-contrat.jrxml");
-        JasperReport jasperReport = JasperCompileManager.compileReport(in);
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, jrBeanArrayDataSource);
-
-        return JasperExportManager.exportReportToPdf(jasperPrint);
+        JasperReport jasperReport = null;
+        try {
+            jasperReport = JasperCompileManager.compileReport(in);
+        } catch (JRException e) {
+            e.printStackTrace();
+        }
+        JasperPrint jasperPrint = null;
+        try {
+            jasperPrint = JasperFillManager.fillReport(jasperReport, map, jrBeanArrayDataSource);
+        } catch (JRException e) {
+            e.printStackTrace();
+        }
+        try {
+            return JasperExportManager.exportReportToPdf(jasperPrint);
+        } catch (JRException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 
